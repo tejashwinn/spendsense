@@ -1,25 +1,26 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/routes"
-	"githug.com/tejashwinn/spendsense-backend/internal/config"
+	"fmt"
+	"log"
+
+	"github.com/tejashwinn/sependsense/config"
+	"github.com/tejashwinn/sependsense/internal/api"
+	"github.com/tejashwinn/sependsense/internal/database"
+	"github.com/tejashwinn/sependsense/mode"
 )
 
 func main() {
-	// Load configuration
-	cfg, err := config.LoadConfig()
-
+	mode.Set(mode.Dev)
+	fmt.Println("Starting sependsense in development mode...")
+	config := config.Get()
+	log.Println(config)
+	db, err := database.New(config.Database.Connection)
 	if err != nil {
-		panic("Failed to load config: " + err.Error())
+		panic(err)
 	}
+	g, err := api.New(db, *config)
 
-	// Initialize Gin router
-	router := gin.Default()
+	g.Run()
 
-	// Set up routes
-	routes.SetupRoutes(router)
-
-	// Start the server
-	router.Run(":" + cfg.ServerPort)
 }
