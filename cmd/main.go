@@ -19,6 +19,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	_, _ = database.NewDynamo(config.Database.Connection)
 	g, err := api.New(db, *config)
 
 	g.Run()

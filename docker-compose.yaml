@@ -1,19 +1,20 @@
 services:
   dynamodb:
     image: amazon/dynamodb-local:latest
-    container_name: dynamodb-local-spendsense
+    container_name: dynamodb-local-spendsense-v2
     ports:
       - "8000:8000"
+    user: root
     volumes:
-      - dynamodb_data:/home/dynamodblocal/data
+      - dynamodb_data_v2:/home/dynamodblocal/data
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
     deploy:
       resources:
         limits:
-          cpus: "0.5"
-          memory: 256M
+          cpus: "4"
+          memory: 512M
         reservations:
           cpus: "0.25"
           memory: 256M
 volumes:
-  dynamodb_data:
+  dynamodb_data_v2:
