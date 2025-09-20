@@ -2,29 +2,6 @@ definitions:
   models.Comment:
     type: object
   models.Expense:
-    properties:
-      createdAt:
-        type: string
-      createdBy:
-        type: integer
-      currency:
-        type: string
-      date:
-        type: string
-      description:
-        type: string
-      group:
-        $ref: '#/definitions/models.Group'
-      groupID:
-        type: integer
-      id:
-        type: integer
-      isRecurring:
-        type: boolean
-      totalAmount:
-        type: number
-      user:
-        $ref: '#/definitions/models.User'
     type: object
   models.Group:
     type: object
@@ -33,23 +10,6 @@ definitions:
   models.Settlement:
     type: object
   models.Split:
-    properties:
-      expense:
-        $ref: '#/definitions/models.Expense'
-      expenseID:
-        type: integer
-      id:
-        type: integer
-      settled:
-        type: boolean
-      splitType:
-        type: string
-      user:
-        $ref: '#/definitions/models.User'
-      userID:
-        type: integer
-      value:
-        type: number
     type: object
   models.User:
     type: object

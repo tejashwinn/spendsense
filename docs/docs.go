@@ -1088,42 +1088,7 @@ const docTemplate = `{
             "type": "object"
         },
         "models.Expense": {
-            "type": "object",
-            "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
-                "createdBy": {
-                    "type": "integer"
-                },
-                "currency": {
-                    "type": "string"
-                },
-                "date": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "group": {
-                    "$ref": "#/definitions/models.Group"
-                },
-                "groupID": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "isRecurring": {
-                    "type": "boolean"
-                },
-                "totalAmount": {
-                    "type": "number"
-                },
-                "user": {
-                    "$ref": "#/definitions/models.User"
-                }
-            }
+            "type": "object"
         },
         "models.Group": {
             "type": "object"
@@ -1135,33 +1100,7 @@ const docTemplate = `{
             "type": "object"
         },
         "models.Split": {
-            "type": "object",
-            "properties": {
-                "expense": {
-                    "$ref": "#/definitions/models.Expense"
-                },
-                "expenseID": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "settled": {
-                    "type": "boolean"
-                },
-                "splitType": {
-                    "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/models.User"
-                },
-                "userID": {
-                    "type": "integer"
-                },
-                "value": {
-                    "type": "number"
-                }
-            }
+            "type": "object"
         },
         "models.User": {
             "type": "object"
