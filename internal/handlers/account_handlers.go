@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"spendsense/internal/models"
+	"spendsense/util"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -57,7 +58,10 @@ func (h *AccountHandler) ListAccounts(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, models.AccountsToListResponse(accounts))
+	c.JSON(http.StatusOK, util.PageResponse[models.AccountResponse]{
+		Items: models.AccountsToListResponse(accounts),
+		Total: uint64(len(accounts)),
+	})
 }
 
 // Update account

@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"spendsense/internal/models"
+	"spendsense/util"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -19,8 +20,11 @@ func (h *AccountTypeHandler) ListAccountTypes(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"account_types": models.AccountTypeToResponseList(accountTypes)})
+	accountTyperespones := models.AccountTypeToResponseList(accountTypes)
+	c.JSON(http.StatusOK, util.PageResponse[models.AccountTypeResponse]{
+		Items: accountTyperespones,
+		Total: uint64(len(accountTypes)),
+	})
 }
 
 // Get single account type by ID

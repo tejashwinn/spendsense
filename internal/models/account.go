@@ -118,10 +118,10 @@ func MapAccountToResponse(acc Account) AccountResponse {
 }
 
 // Map []Account -> ListAccountsResponse
-func AccountsToListResponse(accounts []Account) ListAccountsResponse {
-	responses := make([]AccountResponse, len(accounts))
+func AccountsToListResponse(accounts []Account) []AccountResponse {
+	accountResponses := make([]AccountResponse, len(accounts))
 	for i, acc := range accounts {
-		responses[i] = AccountToResponse(acc)
+		accountResponses[i] = AccountToResponse(acc)
 	}
-	return ListAccountsResponse{Accounts: responses}
+	return accountResponses
 }
