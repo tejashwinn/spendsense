@@ -16,8 +16,8 @@ import (
 // @Accept json
 // @Produce json
 // @Param id path int true "Expense ID"
-// @Param split body models.Split true "Split object"
-// @Success 201 {object} models.Split
+// @Param split body dto.SplitRequest true "Split object"
+// @Success 201 {object} dto.SplitResponse
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /expenses/{id}/splits [post]
@@ -44,7 +44,7 @@ func AddSplit(db *gorm.DB) gin.HandlerFunc {
 // @Tags splits
 // @Produce json
 // @Param id path int true "Expense ID"
-// @Success 200 {array} models.Split
+// @Success 200 {array} dto.SplitResponse
 // @Failure 500 {object} map[string]string
 // @Router /expenses/{id}/splits [get]
 func GetSplits(db *gorm.DB) gin.HandlerFunc {

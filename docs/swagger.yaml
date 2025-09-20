@@ -1,4 +1,11 @@
 definitions:
+  dto.UserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+    type: object
   models.Comment:
     type: object
   models.Expense:
@@ -598,12 +605,12 @@ paths:
       - application/json
       description: Create a new user in the system
       parameters:
-      - description: User object
+      - description: Create User
         in: body
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/dto.UserRequest'
       produces:
       - application/json
       responses:

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"spendsense/internal/dto"
 	"spendsense/internal/models"
 
 	"github.com/gin-gonic/gin"
@@ -15,24 +14,24 @@ import (
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param user body models.User true "User object"
-// @Success 201 {object} models.User
+// @Param user body models.UserRequest true "Create User"
+// @Success 201 {object} models.UserResponse
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /users [post]
 func CreateUser(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var req dto.UserRequest
+		var req models.UserRequest
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		user := dto.RequestToUser(&req)
+		user := models.RequestToUser(&req)
 		if err := db.Create(&user).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusCreated, dto.UserToResponse(&user))
+		c.JSON(http.StatusCreated, models.UserToResponse(&user))
 	}
 }
 
@@ -42,7 +41,7 @@ func CreateUser(db *gorm.DB) gin.HandlerFunc {
 // @Tags users
 // @Produce json
 // @Param id path int true "User ID"
-// @Success 200 {object} models.User
+// @Success 200 {object} models.UserResponse
 // @Failure 404 {object} map[string]string
 // @Router /users/{id} [get]
 func GetUser(db *gorm.DB) gin.HandlerFunc {
@@ -53,7 +52,7 @@ func GetUser(db *gorm.DB) gin.HandlerFunc {
 			c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
 			return
 		}
-		c.JSON(http.StatusOK, dto.UserToResponse(&user))
+		c.JSON(http.StatusOK, models.UserToResponse(&user))
 	}
 }
 
@@ -64,8 +63,8 @@ func GetUser(db *gorm.DB) gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "User ID"
-// @Param user body models.User true "User object"
-// @Success 200 {object} models.User
+// @Param user body models.UserRequest true "User object"
+// @Success 200 {object} models.UserResponse
 // @Failure 400 {object} map[string]string
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
@@ -78,17 +77,17 @@ func UpdateUser(db *gorm.DB) gin.HandlerFunc {
 			c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
 			return
 		}
-		var req dto.UserRequest
+		var req models.UserRequest
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		dto.UpdateUserFromRequest(&user, &req)
+		models.UpdateUserFromRequest(&user, &req)
 		if err := db.Save(&user).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, dto.UserToResponse(&user))
+		c.JSON(http.StatusOK, models.UserToResponse(&user))
 	}
 }
 

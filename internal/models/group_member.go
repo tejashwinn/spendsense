@@ -1,9 +1,23 @@
-package dto
+package models
 
-import "spendsense/internal/models"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
+
+type GroupMember struct {
+	gorm.Model
+	ID       uint   `gorm:"primaryKey"`
+	GroupID  uint   `gorm:"not null"`
+	UserID   uint   `gorm:"not null"`
+	Role     string `gorm:"default:member"`
+	JoinedAt time.Time
+	Group    Group `gorm:"foreignKey:GroupID"`
+	User     User  `gorm:"foreignKey:UserID"`
+}
 
 // GroupMember DTOs
-
 type GroupMemberRequest struct {
 	GroupID uint   `json:"group_id"`
 	UserID  uint   `json:"user_id"`
@@ -18,7 +32,7 @@ type GroupMemberResponse struct {
 	JoinedAt int64  `json:"joined_at"`
 }
 
-func GroupMemberToResponse(member *models.GroupMember) GroupMemberResponse {
+func GroupMemberToResponse(member *GroupMember) GroupMemberResponse {
 	return GroupMemberResponse{
 		ID:       member.ID,
 		GroupID:  member.GroupID,
@@ -28,14 +42,14 @@ func GroupMemberToResponse(member *models.GroupMember) GroupMemberResponse {
 	}
 }
 
-func RequestToGroupMember(req *GroupMemberRequest) models.GroupMember {
-	return models.GroupMember{
+func RequestToGroupMember(req *GroupMemberRequest) GroupMember {
+	return GroupMember{
 		GroupID: req.GroupID,
 		UserID:  req.UserID,
 		Role:    req.Role,
 	}
 }
 
-func UpdateGroupMemberFromRequest(member *models.GroupMember, req *GroupMemberRequest) {
+func UpdateGroupMemberFromRequest(member *GroupMember, req *GroupMemberRequest) {
 	member.Role = req.Role
 }

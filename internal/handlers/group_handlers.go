@@ -14,8 +14,8 @@ import (
 // @Tags groups
 // @Accept json
 // @Produce json
-// @Param group body models.Group true "Group object"
-// @Success 201 {object} models.Group
+// @Param group body dto.GroupRequest true "Group object"
+// @Success 201 {object} dto.GroupResponse
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /groups [post]
@@ -40,7 +40,7 @@ func CreateGroup(db *gorm.DB) gin.HandlerFunc {
 // @Tags groups
 // @Produce json
 // @Param id path int true "Group ID"
-// @Success 200 {object} models.Group
+// @Success 200 {object} dto.GroupResponse
 // @Failure 404 {object} map[string]string
 // @Router /groups/{id} [get]
 func GetGroup(db *gorm.DB) gin.HandlerFunc {
@@ -62,8 +62,8 @@ func GetGroup(db *gorm.DB) gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Group ID"
-// @Param group body models.Group true "Group object"
-// @Success 200 {object} models.Group
+// @Param group body dto.GroupRequest true "Group object"
+// @Success 200 {object} dto.GroupResponse
 // @Failure 400 {object} map[string]string
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
@@ -114,8 +114,8 @@ func DeleteGroup(db *gorm.DB) gin.HandlerFunc {
 // @Tags groups
 // @Accept json
 // @Produce json
-// @Param member body models.GroupMember true "GroupMember object"
-// @Success 201 {object} models.GroupMember
+// @Param member body dto.GroupMemberRequest true "GroupMember object"
+// @Success 201 {object} dto.GroupMemberResponse
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /groups/{id}/members [post]

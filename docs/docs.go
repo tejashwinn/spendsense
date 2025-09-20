@@ -902,12 +902,12 @@ const docTemplate = `{
                 "summary": "Create a new user",
                 "parameters": [
                     {
-                        "description": "User object",
+                        "description": "Create User",
                         "name": "user",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/dto.UserRequest"
                         }
                     }
                 ],
@@ -1084,6 +1084,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.UserRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Comment": {
             "type": "object"
         },
