@@ -1,5 +1,5 @@
 # Spendsense Backend Dockerfile
-FROM golang:1.21-alpine AS builder
+FROM golang:1.25-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN go mod tidy && go build -o spendsense ./cmd/main.go
