@@ -5,6 +5,8 @@ import (
 	"spendsense/config"
 	"spendsense/internal/models"
 
+	"spendsense/internal/routes"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -31,6 +33,15 @@ func main() {
 	)
 
 	r := gin.Default()
-	// TODO: Add routes
+
+	// Register all API routes
+	importRoutes := func() {
+		// This is a hack to force import for side effects
+	}
+	importRoutes()
+
+	// Register routes
+	routes.RegisterRoutes(r, db)
+
 	r.Run(":" + cfg.Port)
 }
