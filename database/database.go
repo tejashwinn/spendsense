@@ -46,8 +46,11 @@ func New(cfg *config.Config) (*GormDatabase, error) {
 		return nil, err
 	}
 
+	// Migrate and seed AccountType
+	err = MigrateAccountType(db)
+
 	if err != nil {
-		log.Fatal("failed to connect database: ", err)
+		return nil, err
 	}
 
 	return &GormDatabase{DB: db}, nil

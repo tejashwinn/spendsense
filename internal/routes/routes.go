@@ -36,6 +36,14 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB) {
 		accounts.DELETE("/:id", accountHandler.DeleteAccount)
 	}
 
+	// Account CRUD
+	accountTypeHandler := &handlers.AccountTypeHandler{DB: db}
+	accountTypes := api.Group("/account-types")
+	{
+		accountTypes.GET("", accountTypeHandler.ListAccountTypes)
+		accountTypes.GET("/:id", accountTypeHandler.GetAccountType)
+	}
+
 	// Group CRUD & membership
 	api.POST("/groups", handlers.CreateGroup(db))
 	api.GET("/groups/:id", handlers.GetGroup(db))
