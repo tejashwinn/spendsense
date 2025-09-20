@@ -16,10 +16,25 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB) {
 	api := r.Group("/api")
 
 	// User CRUD
-	api.POST("/users", handlers.CreateUser(db))
-	api.GET("/users/:id", handlers.GetUser(db))
-	api.PUT("/users/:id", handlers.UpdateUser(db))
-	api.DELETE("/users/:id", handlers.DeleteUser(db))
+	userHandler := &handlers.UserHandler{DB: db}
+	users := api.Group("/users")
+	{
+		users.POST("/users", userHandler.CreateUser)
+		users.GET("/users/:id", userHandler.GetUser)
+		users.PUT("/users/:id", userHandler.UpdateUser)
+		users.DELETE("/users/:id", userHandler.DeleteUser)
+	}
+
+	// Account CRUD
+	accountHandler := &handlers.AccountHandler{DB: db}
+	accounts := api.Group("/accounts")
+	{
+		accounts.POST("", accountHandler.CreateAccount)
+		accounts.GET("", accountHandler.ListAccounts)
+		accounts.GET("/:id", accountHandler.GetAccount)
+		accounts.PUT("/:id", accountHandler.UpdateAccount)
+		accounts.DELETE("/:id", accountHandler.DeleteAccount)
+	}
 
 	// Group CRUD & membership
 	api.POST("/groups", handlers.CreateGroup(db))

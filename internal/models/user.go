@@ -12,6 +12,7 @@ type User struct {
 	Email     string `gorm:"uniqueIndex;not null"`
 	Name      string
 	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 // User DTOs
@@ -21,16 +22,20 @@ type UserRequest struct {
 }
 
 type UserResponse struct {
-	ID    uint   `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	ID        uint      `json:"id"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func UserToResponse(user *User) UserResponse {
 	return UserResponse{
-		ID:    user.ID,
-		Name:  user.Name,
-		Email: user.Email,
+		ID:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
 	}
 }
 

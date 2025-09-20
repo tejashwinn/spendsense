@@ -8,6 +8,10 @@ import (
 	"gorm.io/gorm"
 )
 
+type UserHandler struct {
+	DB *gorm.DB
+}
+
 // CreateUser godoc
 // @Summary Create a new user
 // @Description Create a new user in the system
@@ -19,20 +23,18 @@ import (
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /users [post]
-func CreateUser(db *gorm.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var req models.UserRequest
-		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		user := models.RequestToUser(&req)
-		if err := db.Create(&user).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		c.JSON(http.StatusCreated, models.UserToResponse(&user))
+func (h *UserHandler) CreateUser(c *gin.Context) {
+	var req models.UserRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
+	user := models.RequestToUser(&req)
+	if err := h.DB.Create(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, models.UserToResponse(&user))
 }
 
 // GetUser godoc
@@ -44,16 +46,14 @@ func CreateUser(db *gorm.DB) gin.HandlerFunc {
 // @Success 200 {object} models.UserResponse
 // @Failure 404 {object} map[string]string
 // @Router /users/{id} [get]
-func GetUser(db *gorm.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var user models.User
-		id := c.Param("id")
-		if err := db.First(&user, id).Error; err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
-			return
-		}
-		c.JSON(http.StatusOK, models.UserToResponse(&user))
+func (h *UserHandler) GetUser(c *gin.Context) {
+	var user models.User
+	id := c.Param("id")
+	if err := h.DB.First(&user, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+		return
 	}
+	c.JSON(http.StatusOK, models.UserToResponse(&user))
 }
 
 // UpdateUser godoc
@@ -69,26 +69,26 @@ func GetUser(db *gorm.DB) gin.HandlerFunc {
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /users/{id} [put]
-func UpdateUser(db *gorm.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var user models.User
-		id := c.Param("id")
-		if err := db.First(&user, id).Error; err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
-			return
-		}
-		var req models.UserRequest
-		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		models.UpdateUserFromRequest(&user, &req)
-		if err := db.Save(&user).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		c.JSON(http.StatusOK, models.UserToResponse(&user))
+func (h *UserHandler) UpdateUser(c *gin.Context) {
+
+	var user models.User
+	id := c.Param("id")
+	if err := h.DB.First(&user, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+		return
 	}
+	var req models.UserRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	models.UpdateUserFromRequest(&user, &req)
+	if err := h.DB.Save(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, models.UserToResponse(&user))
+
 }
 
 // DeleteUser godoc
@@ -100,13 +100,12 @@ func UpdateUser(db *gorm.DB) gin.HandlerFunc {
 // @Success 200 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /users/{id} [delete]
-func DeleteUser(db *gorm.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		id := c.Param("id")
-		if err := db.Delete(&models.User{}, id).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{"message": "user deleted"})
+func (h *UserHandler) DeleteUser(c *gin.Context) {
+	id := c.Param("id")
+	if err := h.DB.Delete(&models.User{}, id).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
+	c.JSON(http.StatusOK, gin.H{"message": "user deleted"})
+
 }
