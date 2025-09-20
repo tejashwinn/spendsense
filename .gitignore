@@ -1,0 +1,32 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.wasm
+
+# Build artifacts
+# Go build cache
+.cache/go-build/
+
+# Compiled Go programs
+*.test
+*.prof
+
+# Dependency directories (Go modules)
+# This is typically ignored if you are using Go modules,
+# as Go modules manage dependencies in a vendor directory or the Go module cache.
+vendor/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.bak
+
+# Workspace
+.aws/config
