@@ -1,20 +1,24 @@
 services:
-  dynamodb:
-    image: amazon/dynamodb-local:latest
-    container_name: dynamodb-local-spendsense
+  postgres:
+    image: postgres:17
+    container_name: spendsense_postgres
+    environment:
+      POSTGRES_USER: spendsense_user
+      POSTGRES_PASSWORD: spendsense_password
+      POSTGRES_DB: spendsense
     ports:
-      - "8000:8000"
-    user: root
+      - "5432:5432"
     volumes:
-      - dynamodb_local_spendsense:/home/dynamodblocal/data
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
-    deploy:
+      - spendsense_postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    deploy: 
       resources:
-        limits:
-          cpus: "2"
-          memory: 512M
-        reservations:
-          cpus: "0.25"
-          memory: 256M
+          limits:
+            cpus: "0.5"    # limit to 50% of a CPU core
+            memory: 512M   # limit to 512 MB RAM
+          reservations:
+            cpus: "0.25"
+            memory: 256M
+
 volumes:
-  dynamodb_local_spendsense:
+  spendsense_postgres_data:

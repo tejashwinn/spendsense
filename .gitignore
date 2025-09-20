@@ -1,32 +1,37 @@
-# Binaries for programs and plugins
+# Binaries for the current project
 *.exe
 *.dll
 *.so
 *.dylib
 *.wasm
 
-# Build artifacts
-# Go build cache
-.cache/go-build/
+# Test binaries
+*_test
 
-# Compiled Go programs
-*.test
-*.prof
+# Build output
+bin/
+pkg/
 
-# Dependency directories (Go modules)
-# This is typically ignored if you are using Go modules,
-# as Go modules manage dependencies in a vendor directory or the Go module cache.
+# Dependency management
+# If using Go Modules, 'vendor/' is generally not committed.
 vendor/
-
-# Operating System files
-.DS_Store
-Thumbs.db
 
 # IDE and editor files
 .idea/
 .vscode/
 *.swp
 *.bak
+*~
 
-# Workspace
-.aws/config
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Environment variables
+.env
+
+# Agents
+AGENTS.md
