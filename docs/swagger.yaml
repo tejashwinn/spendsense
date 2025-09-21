@@ -1,28 +1,418 @@
 definitions:
-  dto.UserRequest:
+  models.AccountResponse:
+    properties:
+      balance:
+        type: number
+      created_at:
+        type: string
+      currency:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      provider:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  models.AccountTypeResponse:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  models.CommentRequest:
+    properties:
+      body:
+        type: string
+      created_at:
+        type: string
+      expense_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  models.CommentResponse:
+    properties:
+      body:
+        type: string
+      created_at:
+        type: string
+      expense:
+        $ref: '#/definitions/models.UserResponse'
+      expense_id:
+        type: integer
+      id:
+        type: integer
+      user:
+        $ref: '#/definitions/models.UserResponse'
+      user_id:
+        type: integer
+    type: object
+  models.CreateAccountRequest:
+    properties:
+      balance:
+        type: number
+      currency:
+        type: string
+      name:
+        type: string
+      provider:
+        type: string
+      type:
+        type: string
+    required:
+    - name
+    - type
+    type: object
+  models.ExpenseRequest:
+    properties:
+      created_by:
+        type: integer
+      currency:
+        type: string
+      date:
+        type: string
+      description:
+        type: string
+      group_id:
+        type: integer
+      id:
+        type: integer
+      is_recurring:
+        type: boolean
+      total_amount:
+        type: number
+    type: object
+  models.ExpenseResponse:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      currency:
+        type: string
+      date:
+        type: string
+      description:
+        type: string
+      group:
+        $ref: '#/definitions/models.GroupResponse'
+      group_id:
+        type: integer
+      id:
+        type: integer
+      is_recurring:
+        type: boolean
+      total_amount:
+        type: number
+      user:
+        $ref: '#/definitions/models.UserResponse'
+    type: object
+  models.GroupMemberRequest:
+    properties:
+      group_id:
+        type: integer
+      role:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  models.GroupMemberResponse:
+    properties:
+      group_id:
+        type: integer
+      id:
+        type: integer
+      joined_at:
+        type: integer
+      role:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  models.GroupRequest:
+    properties:
+      name:
+        type: string
+      owner_id:
+        type: integer
+    type: object
+  models.GroupResponse:
+    properties:
+      created_at:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      owner_id:
+        type: integer
+    type: object
+  models.SettlementRequest:
+    properties:
+      amount:
+        type: number
+      currency:
+        type: string
+      from_user:
+        type: integer
+      to_user:
+        type: integer
+    required:
+    - amount
+    - currency
+    - from_user
+    - to_user
+    type: object
+  models.SettlementResponse:
+    properties:
+      amount:
+        type: number
+      created_at:
+        type: string
+      currency:
+        type: string
+      from_user:
+        type: integer
+      from_user_details:
+        $ref: '#/definitions/models.UserResponse'
+      id:
+        type: integer
+      to_user:
+        type: integer
+      to_user_details:
+        $ref: '#/definitions/models.UserResponse'
+    type: object
+  models.SplitRequest:
+    properties:
+      expense_id:
+        type: integer
+      id:
+        type: integer
+      settled:
+        type: boolean
+      split_type:
+        type: string
+      user_id:
+        type: integer
+      value:
+        type: number
+    type: object
+  models.SplitResponse:
+    properties:
+      expense:
+        $ref: '#/definitions/models.ExpenseResponse'
+      expense_id:
+        type: integer
+      id:
+        type: integer
+      settled:
+        type: boolean
+      split_type:
+        type: string
+      user:
+        $ref: '#/definitions/models.UserResponse'
+      user_id:
+        type: integer
+      value:
+        type: number
+    type: object
+  models.UpdateAccountRequest:
+    properties:
+      balance:
+        type: number
+      currency:
+        type: string
+      name:
+        type: string
+      provider:
+        type: string
+      type:
+        type: string
+    type: object
+  models.UserRequest:
     properties:
       email:
         type: string
       name:
         type: string
     type: object
-  models.Comment:
+  models.UserResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
     type: object
-  models.Expense:
+  util.AccountPageResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/models.AccountResponse'
+        type: array
+      page:
+        type: integer
+      size:
+        type: integer
+      total:
+        type: integer
     type: object
-  models.Group:
-    type: object
-  models.GroupMember:
-    type: object
-  models.Settlement:
-    type: object
-  models.Split:
-    type: object
-  models.User:
+  util.AccountTypePageResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/models.AccountTypeResponse'
+        type: array
+      page:
+        type: integer
+      size:
+        type: integer
+      total:
+        type: integer
     type: object
 info:
   contact: {}
 paths:
+  /account-types:
+    get:
+      description: List all account types
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.AccountTypePageResponse'
+      summary: List account types
+      tags:
+      - account-types
+  /account-types/{id}:
+    get:
+      description: Get a single account type by ID
+      parameters:
+      - description: Account Type ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AccountTypeResponse'
+      summary: Get account type
+      tags:
+      - account-types
+  /accounts:
+    get:
+      description: List all accounts for the user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.AccountPageResponse'
+      summary: List accounts
+      tags:
+      - accounts
+    post:
+      consumes:
+      - application/json
+      description: Create a new account for the user
+      parameters:
+      - description: Account info
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.AccountResponse'
+      summary: Create account
+      tags:
+      - accounts
+  /accounts/{id}:
+    delete:
+      description: Delete an account by ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Delete account
+      tags:
+      - accounts
+    get:
+      description: Get details of a single account by ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AccountResponse'
+      summary: Get account
+      tags:
+      - accounts
+    put:
+      consumes:
+      - application/json
+      description: Update an existing account by ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Account update info
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AccountResponse'
+      summary: Update account
+      tags:
+      - accounts
   /activity:
     get:
       description: Get recent expenses and settlements
@@ -55,14 +445,14 @@ paths:
         name: expense
         required: true
         schema:
-          $ref: '#/definitions/models.Expense'
+          $ref: '#/definitions/models.ExpenseRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Expense'
+            $ref: '#/definitions/models.ExpenseResponse'
         "400":
           description: Bad Request
           schema:
@@ -119,7 +509,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Expense'
+            $ref: '#/definitions/models.ExpenseResponse'
         "404":
           description: Not Found
           schema:
@@ -144,14 +534,14 @@ paths:
         name: expense
         required: true
         schema:
-          $ref: '#/definitions/models.Expense'
+          $ref: '#/definitions/models.ExpenseRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Expense'
+            $ref: '#/definitions/models.ExpenseResponse'
         "400":
           description: Bad Request
           schema:
@@ -189,7 +579,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Comment'
+              $ref: '#/definitions/models.CommentResponse'
             type: array
         "500":
           description: Internal Server Error
@@ -215,14 +605,14 @@ paths:
         name: comment
         required: true
         schema:
-          $ref: '#/definitions/models.Comment'
+          $ref: '#/definitions/models.CommentRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Comment'
+            $ref: '#/definitions/models.CommentResponse'
         "400":
           description: Bad Request
           schema:
@@ -254,7 +644,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Split'
+              $ref: '#/definitions/models.SplitResponse'
             type: array
         "500":
           description: Internal Server Error
@@ -280,14 +670,14 @@ paths:
         name: split
         required: true
         schema:
-          $ref: '#/definitions/models.Split'
+          $ref: '#/definitions/models.SplitRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Split'
+            $ref: '#/definitions/models.SplitResponse'
         "400":
           description: Bad Request
           schema:
@@ -314,14 +704,14 @@ paths:
         name: group
         required: true
         schema:
-          $ref: '#/definitions/models.Group'
+          $ref: '#/definitions/models.GroupRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Group'
+            $ref: '#/definitions/models.GroupResponse'
         "400":
           description: Bad Request
           schema:
@@ -378,7 +768,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Group'
+            $ref: '#/definitions/models.GroupResponse'
         "404":
           description: Not Found
           schema:
@@ -403,14 +793,14 @@ paths:
         name: group
         required: true
         schema:
-          $ref: '#/definitions/models.Group'
+          $ref: '#/definitions/models.GroupRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Group'
+            $ref: '#/definitions/models.GroupResponse'
         "400":
           description: Bad Request
           schema:
@@ -443,14 +833,14 @@ paths:
         name: member
         required: true
         schema:
-          $ref: '#/definitions/models.GroupMember'
+          $ref: '#/definitions/models.GroupMemberRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.GroupMember'
+            $ref: '#/definitions/models.GroupMemberResponse'
         "400":
           description: Bad Request
           schema:
@@ -551,14 +941,14 @@ paths:
         name: settlement
         required: true
         schema:
-          $ref: '#/definitions/models.Settlement'
+          $ref: '#/definitions/models.SettlementRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Settlement'
+            $ref: '#/definitions/models.SettlementResponse'
         "400":
           description: Bad Request
           schema:
@@ -589,7 +979,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Settlement'
+            $ref: '#/definitions/models.SettlementResponse'
         "404":
           description: Not Found
           schema:
@@ -610,14 +1000,14 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/dto.UserRequest'
+          $ref: '#/definitions/models.UserRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.User'
+            $ref: '#/definitions/models.UserResponse'
         "400":
           description: Bad Request
           schema:
@@ -674,7 +1064,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.User'
+            $ref: '#/definitions/models.UserResponse'
         "404":
           description: Not Found
           schema:
@@ -699,14 +1089,14 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/models.UserRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.User'
+            $ref: '#/definitions/models.UserResponse'
         "400":
           description: Bad Request
           schema:

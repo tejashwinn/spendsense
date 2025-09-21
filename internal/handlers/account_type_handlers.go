@@ -14,6 +14,12 @@ type AccountTypeHandler struct {
 }
 
 // List all account types
+// @Summary List account types
+// @Description List all account types
+// @Tags account-types
+// @Produce json
+// @Success 200 {object} util.AccountTypePageResponse
+// @Router /account-types [get]
 func (h *AccountTypeHandler) ListAccountTypes(c *gin.Context) {
 	var accountTypes []models.AccountType
 	if err := h.DB.Find(&accountTypes).Error; err != nil {
@@ -28,6 +34,13 @@ func (h *AccountTypeHandler) ListAccountTypes(c *gin.Context) {
 }
 
 // Get single account type by ID
+// @Summary Get account type
+// @Description Get a single account type by ID
+// @Tags account-types
+// @Produce json
+// @Param id path int true "Account Type ID"
+// @Success 200 {object} models.AccountTypeResponse
+// @Router /account-types/{id} [get]
 func (h *AccountTypeHandler) GetAccountType(c *gin.Context) {
 	id := c.Param("id")
 	var accountType models.AccountType

@@ -14,8 +14,8 @@ import (
 // @Tags settlements
 // @Accept json
 // @Produce json
-// @Param settlement body dto.SettlementRequest true "Settlement object"
-// @Success 201 {object} dto.SettlementResponse
+// @Param settlement body models.SettlementRequest true "Settlement object"
+// @Success 201 {object} models.SettlementResponse
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /settlements [post]
@@ -40,7 +40,7 @@ func CreateSettlement(db *gorm.DB) gin.HandlerFunc {
 // @Tags settlements
 // @Produce json
 // @Param id path int true "Settlement ID"
-// @Success 200 {object} dto.SettlementResponse
+// @Success 200 {object} models.SettlementResponse
 // @Failure 404 {object} map[string]string
 // @Router /settlements/{id} [get]
 func GetSettlement(db *gorm.DB) gin.HandlerFunc {

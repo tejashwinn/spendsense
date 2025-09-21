@@ -15,6 +15,199 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/account-types": {
+            "get": {
+                "description": "List all account types",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account-types"
+                ],
+                "summary": "List account types",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.AccountTypePageResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/account-types/{id}": {
+            "get": {
+                "description": "Get a single account type by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account-types"
+                ],
+                "summary": "Get account type",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Account Type ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.AccountTypeResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts": {
+            "get": {
+                "description": "List all accounts for the user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "List accounts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.AccountPageResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new account for the user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Create account",
+                "parameters": [
+                    {
+                        "description": "Account info",
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateAccountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.AccountResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/{id}": {
+            "get": {
+                "description": "Get details of a single account by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Get account",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.AccountResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update an existing account by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Update account",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Account update info",
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UpdateAccountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.AccountResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete an account by ID",
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Delete account",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/activity": {
             "get": {
                 "description": "Get recent expenses and settlements",
@@ -67,7 +260,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Expense"
+                            "$ref": "#/definitions/models.ExpenseRequest"
                         }
                     }
                 ],
@@ -75,7 +268,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Expense"
+                            "$ref": "#/definitions/models.ExpenseResponse"
                         }
                     },
                     "400": {
@@ -122,7 +315,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Expense"
+                            "$ref": "#/definitions/models.ExpenseResponse"
                         }
                     },
                     "404": {
@@ -162,7 +355,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Expense"
+                            "$ref": "#/definitions/models.ExpenseRequest"
                         }
                     }
                 ],
@@ -170,7 +363,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Expense"
+                            "$ref": "#/definitions/models.ExpenseResponse"
                         }
                     },
                     "400": {
@@ -267,7 +460,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Comment"
+                                "$ref": "#/definitions/models.CommentResponse"
                             }
                         }
                     },
@@ -308,7 +501,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Comment"
+                            "$ref": "#/definitions/models.CommentRequest"
                         }
                     }
                 ],
@@ -316,7 +509,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Comment"
+                            "$ref": "#/definitions/models.CommentResponse"
                         }
                     },
                     "400": {
@@ -365,7 +558,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Split"
+                                "$ref": "#/definitions/models.SplitResponse"
                             }
                         }
                     },
@@ -406,7 +599,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Split"
+                            "$ref": "#/definitions/models.SplitRequest"
                         }
                     }
                 ],
@@ -414,7 +607,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Split"
+                            "$ref": "#/definitions/models.SplitResponse"
                         }
                     },
                     "400": {
@@ -458,7 +651,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Group"
+                            "$ref": "#/definitions/models.GroupRequest"
                         }
                     }
                 ],
@@ -466,7 +659,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Group"
+                            "$ref": "#/definitions/models.GroupResponse"
                         }
                     },
                     "400": {
@@ -513,7 +706,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Group"
+                            "$ref": "#/definitions/models.GroupResponse"
                         }
                     },
                     "404": {
@@ -553,7 +746,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Group"
+                            "$ref": "#/definitions/models.GroupRequest"
                         }
                     }
                 ],
@@ -561,7 +754,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Group"
+                            "$ref": "#/definitions/models.GroupResponse"
                         }
                     },
                     "400": {
@@ -653,7 +846,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.GroupMember"
+                            "$ref": "#/definitions/models.GroupMemberRequest"
                         }
                     }
                 ],
@@ -661,7 +854,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.GroupMember"
+                            "$ref": "#/definitions/models.GroupMemberResponse"
                         }
                     },
                     "400": {
@@ -817,7 +1010,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Settlement"
+                            "$ref": "#/definitions/models.SettlementRequest"
                         }
                     }
                 ],
@@ -825,7 +1018,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Settlement"
+                            "$ref": "#/definitions/models.SettlementResponse"
                         }
                     },
                     "400": {
@@ -872,7 +1065,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Settlement"
+                            "$ref": "#/definitions/models.SettlementResponse"
                         }
                     },
                     "404": {
@@ -907,7 +1100,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UserRequest"
+                            "$ref": "#/definitions/models.UserRequest"
                         }
                     }
                 ],
@@ -915,7 +1108,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/models.UserResponse"
                         }
                     },
                     "400": {
@@ -962,7 +1155,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/models.UserResponse"
                         }
                     },
                     "404": {
@@ -1002,7 +1195,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/models.UserRequest"
                         }
                     }
                 ],
@@ -1010,7 +1203,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/models.UserResponse"
                         }
                     },
                     "400": {
@@ -1084,7 +1277,370 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.UserRequest": {
+        "models.AccountResponse": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.AccountTypeResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.CommentRequest": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "expense_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.CommentResponse": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "expense": {
+                    "$ref": "#/definitions/models.UserResponse"
+                },
+                "expense_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.UserResponse"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.CreateAccountRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "type"
+            ],
+            "properties": {
+                "balance": {
+                    "type": "number"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ExpenseRequest": {
+            "type": "object",
+            "properties": {
+                "created_by": {
+                    "type": "integer"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "group_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_recurring": {
+                    "type": "boolean"
+                },
+                "total_amount": {
+                    "type": "number"
+                }
+            }
+        },
+        "models.ExpenseResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "integer"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "group": {
+                    "$ref": "#/definitions/models.GroupResponse"
+                },
+                "group_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_recurring": {
+                    "type": "boolean"
+                },
+                "total_amount": {
+                    "type": "number"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.UserResponse"
+                }
+            }
+        },
+        "models.GroupMemberRequest": {
+            "type": "object",
+            "properties": {
+                "group_id": {
+                    "type": "integer"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.GroupMemberResponse": {
+            "type": "object",
+            "properties": {
+                "group_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "joined_at": {
+                    "type": "integer"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.GroupRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "owner_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.GroupResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owner_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.SettlementRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "currency",
+                "from_user",
+                "to_user"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "from_user": {
+                    "type": "integer"
+                },
+                "to_user": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.SettlementResponse": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "from_user": {
+                    "type": "integer"
+                },
+                "from_user_details": {
+                    "$ref": "#/definitions/models.UserResponse"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "to_user": {
+                    "type": "integer"
+                },
+                "to_user_details": {
+                    "$ref": "#/definitions/models.UserResponse"
+                }
+            }
+        },
+        "models.SplitRequest": {
+            "type": "object",
+            "properties": {
+                "expense_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "settled": {
+                    "type": "boolean"
+                },
+                "split_type": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "value": {
+                    "type": "number"
+                }
+            }
+        },
+        "models.SplitResponse": {
+            "type": "object",
+            "properties": {
+                "expense": {
+                    "$ref": "#/definitions/models.ExpenseResponse"
+                },
+                "expense_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "settled": {
+                    "type": "boolean"
+                },
+                "split_type": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.UserResponse"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "value": {
+                    "type": "number"
+                }
+            }
+        },
+        "models.UpdateAccountRequest": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "number"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1095,26 +1651,65 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Comment": {
-            "type": "object"
+        "models.UserResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
         },
-        "models.Expense": {
-            "type": "object"
+        "util.AccountPageResponse": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.AccountResponse"
+                    }
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
         },
-        "models.Group": {
-            "type": "object"
-        },
-        "models.GroupMember": {
-            "type": "object"
-        },
-        "models.Settlement": {
-            "type": "object"
-        },
-        "models.Split": {
-            "type": "object"
-        },
-        "models.User": {
-            "type": "object"
+        "util.AccountTypePageResponse": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.AccountTypeResponse"
+                    }
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
         }
     }
 }`

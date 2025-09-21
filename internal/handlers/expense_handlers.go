@@ -14,8 +14,8 @@ import (
 // @Tags expenses
 // @Accept json
 // @Produce json
-// @Param expense body dto.ExpenseRequest true "Expense object"
-// @Success 201 {object} dto.ExpenseResponse
+// @Param expense body models.ExpenseRequest true "Expense object"
+// @Success 201 {object} models.ExpenseResponse
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /expenses [post]
@@ -40,7 +40,7 @@ func CreateExpense(db *gorm.DB) gin.HandlerFunc {
 // @Tags expenses
 // @Produce json
 // @Param id path int true "Expense ID"
-// @Success 200 {object} dto.ExpenseResponse
+// @Success 200 {object} models.ExpenseResponse
 // @Failure 404 {object} map[string]string
 // @Router /expenses/{id} [get]
 func GetExpense(db *gorm.DB) gin.HandlerFunc {
@@ -62,8 +62,8 @@ func GetExpense(db *gorm.DB) gin.HandlerFunc {
 // @Accept json
 // @Produce json
 // @Param id path int true "Expense ID"
-// @Param expense body dto.ExpenseRequest true "Expense object"
-// @Success 200 {object} dto.ExpenseResponse
+// @Param expense body models.ExpenseRequest true "Expense object"
+// @Success 200 {object} models.ExpenseResponse
 // @Failure 400 {object} map[string]string
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string

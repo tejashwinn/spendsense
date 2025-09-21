@@ -16,3 +16,20 @@ type Comment struct {
 	Body      string
 	CreatedAt time.Time
 }
+
+type CommentRequest struct {
+	ExpenseID uint      `json:"expense_id"`
+	UserID    uint      `json:"user_id"`
+	Body      string    `json:"body"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
+type CommentResponse struct {
+	ID        uint         `json:"id"`
+	ExpenseID uint         `json:"expense_id"`
+	Expense   UserResponse `json:"expense"`
+	UserID    uint         `json:"user_id"`
+	User      UserResponse `json:"user"`
+	Body      string       `json:"body"`
+	CreatedAt time.Time    `json:"created_at"`
+}

@@ -21,11 +21,20 @@ type Split struct {
 }
 
 type SplitResponse struct {
+	ID        uint            `json:"id"`
+	ExpenseID uint            `json:"expense_id"`
+	Expense   ExpenseResponse `json:"expense"`
+	UserID    uint            `json:"user_id"`
+	User      UserResponse    `json:"user"`
+	SplitType string          `json:"split_type"`
+	Value     float64         `json:"value"`
+	Settled   bool            `json:"settled"`
+}
+
+type SplitRequest struct {
 	ID        uint    `json:"id"`
 	ExpenseID uint    `json:"expense_id"`
-	Expense   Expense `json:"expense"`
 	UserID    uint    `json:"user_id"`
-	User      User    `json:"user"`
 	SplitType string  `json:"split_type"`
 	Value     float64 `json:"value"`
 	Settled   bool    `json:"settled"`

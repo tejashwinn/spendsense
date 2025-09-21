@@ -16,8 +16,8 @@ import (
 // @Accept json
 // @Produce json
 // @Param id path int true "Expense ID"
-// @Param comment body dto.CommentRequest true "Comment object"
-// @Success 201 {object} dto.CommentResponse
+// @Param comment body models.CommentRequest true "Comment object"
+// @Success 201 {object} models.CommentResponse
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /expenses/{id}/comments [post]
@@ -44,7 +44,7 @@ func AddComment(db *gorm.DB) gin.HandlerFunc {
 // @Tags comments
 // @Produce json
 // @Param id path int true "Expense ID"
-// @Success 200 {array} dto.CommentResponse
+// @Success 200 {array} models.CommentResponse
 // @Failure 500 {object} map[string]string
 // @Router /expenses/{id}/comments [get]
 func GetComments(db *gorm.DB) gin.HandlerFunc {
