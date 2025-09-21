@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"spendsense/internal/models"
+	"spendsense/internal/repo"
 	"spendsense/util"
 	"time"
 
@@ -11,7 +12,7 @@ import (
 )
 
 type AccountHandler struct {
-	DB *gorm.DB
+	AccountRepo *repo.AccountRepo
 }
 
 // Create account
@@ -30,21 +31,19 @@ func (h *AccountHandler) CreateAccount(c *gin.Context) {
 		return
 	}
 
-	accType := &models.AccountType{}
-
-	if err := h.DB.First(accType, req.TypeID).Error; err != nil {
+	userID := util.UserIDFromContext(c)
+	accType, err := h.AccountRepo.GetAccountTypeByID(req.TypeID)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	user := &models.User{}
-	userID := util.UserIDFromContext(c)
-	if err := h.DB.First(&user, userID).Error; err != nil {
+	user, err := h.AccountRepo.GetUserByID(userID)
+	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
 		return
 	}
-
-	currency := &models.Currency{}
-	if err := h.DB.First(&currency, userID).Error; err != nil {
+	currency, err := h.AccountRepo.GetCurrencyByID(userID)
+	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "currency not found"})
 		return
 	}
@@ -53,7 +52,7 @@ func (h *AccountHandler) CreateAccount(c *gin.Context) {
 	account.Type = *accType
 	account.User = *user
 	account.Currency = *currency
-	if err := h.DB.Create(&account).Error; err != nil {
+	if err := h.AccountRepo.CreateAccount(&account); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -71,8 +70,8 @@ func (h *AccountHandler) CreateAccount(c *gin.Context) {
 // @Router /accounts/{id} [get]
 func (h *AccountHandler) GetAccount(c *gin.Context) {
 	id := c.Param("id")
-	var account models.Account
-	if err := h.DB.First(&account, id).Error; err != nil {
+	account, err := h.AccountRepo.GetAccountByID(id)
+	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": "account not found"})
 		} else {
@@ -80,8 +79,7 @@ func (h *AccountHandler) GetAccount(c *gin.Context) {
 		}
 		return
 	}
-
-	c.JSON(http.StatusOK, models.AccountToResponse(account))
+	c.JSON(http.StatusOK, models.AccountToResponse(*account))
 }
 
 // List accounts
@@ -92,17 +90,12 @@ func (h *AccountHandler) GetAccount(c *gin.Context) {
 // @Success 200 {object} util.AccountPageResponse
 // @Router /accounts [get]
 func (h *AccountHandler) ListAccounts(c *gin.Context) {
-	var accounts []models.Account
 	userID := util.UserIDFromContext(c)
-	if err := h.DB.
-		Where("user_id = ? ", userID).
-		Order("created_at desc").
-		Find(&accounts).
-		Error; err != nil {
+	accounts, err := h.AccountRepo.ListAccountsByUser(userID)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
 	c.JSON(http.StatusOK, util.PageResponse[models.AccountResponse]{
 		Items: models.AccountsToListResponse(accounts),
 		Total: uint64(len(accounts)),
@@ -127,8 +120,8 @@ func (h *AccountHandler) UpdateAccount(c *gin.Context) {
 		return
 	}
 
-	var account models.Account
-	if err := h.DB.First(&account, id).Error; err != nil {
+	account, err := h.AccountRepo.GetAccountByID(id)
+	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": "account not found"})
 		} else {
@@ -137,15 +130,15 @@ func (h *AccountHandler) UpdateAccount(c *gin.Context) {
 		return
 	}
 
-	models.UpdateRequestToModel(&account, req)
+	models.UpdateRequestToModel(account, req)
 	account.UpdatedAt = time.Now()
 
-	if err := h.DB.Save(&account).Error; err != nil {
+	if err := h.AccountRepo.UpdateAccount(account); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, models.AccountToResponse(account))
+	c.JSON(http.StatusOK, models.AccountToResponse(*account))
 }
 
 // Delete account
@@ -157,10 +150,9 @@ func (h *AccountHandler) UpdateAccount(c *gin.Context) {
 // @Router /accounts/{id} [delete]
 func (h *AccountHandler) DeleteAccount(c *gin.Context) {
 	id := c.Param("id")
-	if err := h.DB.Delete(&models.Account{}, id).Error; err != nil {
+	if err := h.AccountRepo.DeleteAccount(id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
 	c.Status(http.StatusNoContent)
 }

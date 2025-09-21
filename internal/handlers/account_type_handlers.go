@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"spendsense/internal/models"
+	"spendsense/internal/repo"
 	"spendsense/util"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +11,7 @@ import (
 )
 
 type AccountTypeHandler struct {
-	DB *gorm.DB
+	AccountTypeRepo *repo.AccountTypeRepo
 }
 
 // List all account types
@@ -21,8 +22,8 @@ type AccountTypeHandler struct {
 // @Success 200 {object} util.AccountTypePageResponse
 // @Router /account-types [get]
 func (h *AccountTypeHandler) ListAccountTypes(c *gin.Context) {
-	var accountTypes []models.AccountType
-	if err := h.DB.Find(&accountTypes).Error; err != nil {
+	accountTypes, err := h.AccountTypeRepo.ListAccountTypes()
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -43,8 +44,8 @@ func (h *AccountTypeHandler) ListAccountTypes(c *gin.Context) {
 // @Router /account-types/{id} [get]
 func (h *AccountTypeHandler) GetAccountType(c *gin.Context) {
 	id := c.Param("id")
-	var accountType models.AccountType
-	if err := h.DB.First(&accountType, id).Error; err != nil {
+	accountType, err := h.AccountTypeRepo.GetAccountTypeByID(id)
+	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": "account type not found"})
 		} else {
@@ -52,6 +53,5 @@ func (h *AccountTypeHandler) GetAccountType(c *gin.Context) {
 		}
 		return
 	}
-
-	c.JSON(http.StatusOK, models.AccountTypeToResponse(&accountType))
+	c.JSON(http.StatusOK, models.AccountTypeToResponse(accountType))
 }

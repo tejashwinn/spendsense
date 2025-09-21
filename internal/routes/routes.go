@@ -2,6 +2,7 @@ package routes
 
 import (
 	"spendsense/internal/handlers"
+	"spendsense/internal/repo"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -16,41 +17,16 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB) {
 	api := r.Group("/api")
 
 	// User CRUD
-	userHandler := &handlers.UserHandler{DB: db}
-	users := api.Group("/users")
-	{
-		users.POST("", userHandler.CreateUser)
-		users.GET("/:id", userHandler.GetUser)
-		users.PUT("/:id", userHandler.UpdateUser)
-		users.DELETE("/:id", userHandler.DeleteUser)
-	}
+	registerUserRoutes(db, api)
 
 	// Account CRUD
-	accountHandler := &handlers.AccountHandler{DB: db}
-	accounts := api.Group("/accounts")
-	{
-		accounts.POST("", accountHandler.CreateAccount)
-		accounts.GET("", accountHandler.ListAccounts)
-		accounts.GET("/:id", accountHandler.GetAccount)
-		accounts.PUT("/:id", accountHandler.UpdateAccount)
-		accounts.DELETE("/:id", accountHandler.DeleteAccount)
-	}
+	registerAccountRoutes(db, api)
 
 	// Account Type CRUD
-	accountTypeHandler := &handlers.AccountTypeHandler{DB: db}
-	accountTypes := api.Group("/account-types")
-	{
-		accountTypes.GET("", accountTypeHandler.ListAccountTypes)
-		accountTypes.GET("/:id", accountTypeHandler.GetAccountType)
-	}
+	registerAccountTypeRoutes(db, api)
 
 	// Account Type CRUD
-	currencyHandler := &handlers.CurrencyHandler{DB: db}
-	currencies := api.Group("/currencies")
-	{
-		currencies.GET("", currencyHandler.ListCurrencies)
-		currencies.GET("/:id", currencyHandler.GetCurrency)
-	}
+	registerCurrencyRoutes(db, api)
 
 	// Group CRUD & membership
 	api.POST("/groups", handlers.CreateGroup(db))
@@ -85,4 +61,53 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB) {
 	// Audit log & activity feed
 	api.GET("/activity", handlers.ActivityFeed(db))
 	// ...existing code...
+}
+
+func registerCurrencyRoutes(db *gorm.DB, api *gin.RouterGroup) {
+	currencyHandler := &handlers.CurrencyHandler{
+		CurrencyRepo: repo.NewCurrencyRepo(db),
+	}
+	currencies := api.Group("/currencies")
+	{
+		currencies.GET("", currencyHandler.ListCurrencies)
+		currencies.GET("/:id", currencyHandler.GetCurrency)
+	}
+}
+
+func registerAccountTypeRoutes(db *gorm.DB, api *gin.RouterGroup) {
+	accountTypeHandler := &handlers.AccountTypeHandler{
+		AccountTypeRepo: repo.NewAccountTypeRepo(db),
+	}
+	accountTypes := api.Group("/account-types")
+	{
+		accountTypes.GET("", accountTypeHandler.ListAccountTypes)
+		accountTypes.GET("/:id", accountTypeHandler.GetAccountType)
+	}
+}
+
+func registerAccountRoutes(db *gorm.DB, api *gin.RouterGroup) {
+	accountHandler := &handlers.AccountHandler{
+		AccountRepo: repo.NewAccountRepo(db),
+	}
+	accounts := api.Group("/accounts")
+	{
+		accounts.POST("", accountHandler.CreateAccount)
+		accounts.GET("", accountHandler.ListAccounts)
+		accounts.GET("/:id", accountHandler.GetAccount)
+		accounts.PUT("/:id", accountHandler.UpdateAccount)
+		accounts.DELETE("/:id", accountHandler.DeleteAccount)
+	}
+}
+
+func registerUserRoutes(db *gorm.DB, api *gin.RouterGroup) {
+	userHandler := &handlers.UserHandler{
+		UserRepo: repo.NewUserRepo(db),
+	}
+	users := api.Group("/users")
+	{
+		users.POST("", userHandler.CreateUser)
+		users.GET("/:id", userHandler.GetUser)
+		users.PUT("/:id", userHandler.UpdateUser)
+		users.DELETE("/:id", userHandler.DeleteUser)
+	}
 }

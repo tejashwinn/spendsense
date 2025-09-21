@@ -3,13 +3,13 @@ package handlers
 import (
 	"net/http"
 	"spendsense/internal/models"
+	"spendsense/internal/repo"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type UserHandler struct {
-	DB *gorm.DB
+	UserRepo *repo.UserRepo
 }
 
 // CreateUser godoc
@@ -30,7 +30,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		return
 	}
 	user := models.RequestToUser(&req)
-	if err := h.DB.Create(&user).Error; err != nil {
+	if err := h.UserRepo.CreateUser(&user); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -47,13 +47,13 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 // @Failure 404 {object} map[string]string
 // @Router /users/{id} [get]
 func (h *UserHandler) GetUser(c *gin.Context) {
-	var user models.User
 	id := c.Param("id")
-	if err := h.DB.First(&user, id).Error; err != nil {
+	user, err := h.UserRepo.GetUserByID(id)
+	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
 		return
 	}
-	c.JSON(http.StatusOK, models.UserToResponse(&user))
+	c.JSON(http.StatusOK, models.UserToResponse(user))
 }
 
 // UpdateUser godoc
@@ -70,10 +70,9 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 // @Failure 500 {object} map[string]string
 // @Router /users/{id} [put]
 func (h *UserHandler) UpdateUser(c *gin.Context) {
-
-	var user models.User
 	id := c.Param("id")
-	if err := h.DB.First(&user, id).Error; err != nil {
+	user, err := h.UserRepo.GetUserByID(id)
+	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
 		return
 	}
@@ -82,12 +81,12 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	models.UpdateUserFromRequest(&user, &req)
-	if err := h.DB.Save(&user).Error; err != nil {
+	models.UpdateUserFromRequest(user, &req)
+	if err := h.UserRepo.UpdateUser(user); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, models.UserToResponse(&user))
+	c.JSON(http.StatusOK, models.UserToResponse(user))
 
 }
 
@@ -102,7 +101,7 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 // @Router /users/{id} [delete]
 func (h *UserHandler) DeleteUser(c *gin.Context) {
 	id := c.Param("id")
-	if err := h.DB.Delete(&models.User{}, id).Error; err != nil {
+	if err := h.UserRepo.DeleteUser(id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

@@ -3,14 +3,14 @@ package handlers
 import (
 	"net/http"
 	"spendsense/internal/models"
+	"spendsense/internal/repo"
 	"spendsense/util"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type CurrencyHandler struct {
-	DB *gorm.DB
+	CurrencyRepo *repo.CurrencyRepo
 }
 
 // List all currencies
@@ -21,8 +21,8 @@ type CurrencyHandler struct {
 // @Success 200 {object} util.CurrencyPageResponse
 // @Router /account-types [get]
 func (h *CurrencyHandler) ListCurrencies(c *gin.Context) {
-	var currencies []models.Currency
-	if err := h.DB.Find(&currencies).Error; err != nil {
+	currencies, err := h.CurrencyRepo.ListCurrencies()
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -43,15 +43,9 @@ func (h *CurrencyHandler) ListCurrencies(c *gin.Context) {
 // @Router /account-types/{id} [get]
 func (h *CurrencyHandler) GetCurrency(c *gin.Context) {
 	id := c.Param("id")
-	var currency models.Currency
-	if err := h.DB.First(&currency, id).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			c.JSON(http.StatusNotFound, gin.H{"error": "account type not found"})
-		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
-		return
+	currency, err := h.CurrencyRepo.GetCurrencyByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "currency not found"})
 	}
-
-	c.JSON(http.StatusOK, models.CurrencyToResponse(&currency))
+	c.JSON(http.StatusOK, models.CurrencyToResponse(currency))
 }
