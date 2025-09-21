@@ -1,0 +1,37 @@
+# Binaries for the current project
+*.exe
+*.dll
+*.so
+*.dylib
+*.wasm
+
+# Test binaries
+*_test
+
+# Build output
+bin/
+pkg/
+
+# Dependency management
+# If using Go Modules, 'vendor/' is generally not committed.
+vendor/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.bak
+*~
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Environment variables
+.env
+
+# Agents
+AGENTS.md

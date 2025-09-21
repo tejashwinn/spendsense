@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: spendsense_postgres
+    environment:
+      POSTGRES_USER: spendsense_user
+      POSTGRES_PASSWORD: spendsense_password
+      POSTGRES_DB: spendsense
+    ports:
+      - "5432:5432"
+    volumes:
+      - spendsense_postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    deploy: 
+      resources:
+          limits:
+            cpus: "0.5"    # limit to 50% of a CPU core
+            memory: 512M   # limit to 512 MB RAM
+          reservations:
+            cpus: "0.25"
+            memory: 256M
+
+volumes:
+  spendsense_postgres_data:
