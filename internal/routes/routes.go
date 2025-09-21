@@ -87,7 +87,9 @@ func registerAccountTypeRoutes(db *gorm.DB, api *gin.RouterGroup) {
 
 func registerAccountRoutes(db *gorm.DB, api *gin.RouterGroup) {
 	accountHandler := &handlers.AccountHandler{
-		AccountRepo: repo.NewAccountRepo(db),
+		AccountRepo:  repo.NewAccountRepo(db),
+		CurrencyRepo: repo.NewCurrencyRepo(db),
+		UserRepo:     repo.NewUserRepo(db),
 	}
 	accounts := api.Group("/accounts")
 	{

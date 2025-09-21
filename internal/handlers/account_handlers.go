@@ -12,7 +12,9 @@ import (
 )
 
 type AccountHandler struct {
-	AccountRepo *repo.AccountRepo
+	AccountRepo  *repo.AccountRepo
+	UserRepo     *repo.UserRepo
+	CurrencyRepo *repo.CurrencyRepo
 }
 
 // Create account
@@ -37,12 +39,12 @@ func (h *AccountHandler) CreateAccount(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	user, err := h.AccountRepo.GetUserByID(userID)
+	user, err := h.UserRepo.GetUserByID(userID)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
 		return
 	}
-	currency, err := h.AccountRepo.GetCurrencyByID(userID)
+	currency, err := h.CurrencyRepo.GetCurrencyByID(userID)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "currency not found"})
 		return

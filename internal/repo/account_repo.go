@@ -49,19 +49,3 @@ func (r *AccountRepo) GetAccountTypeByID(id interface{}) (*models.AccountType, e
 	}
 	return &accType, nil
 }
-
-func (r *AccountRepo) GetUserByID(id interface{}) (*models.User, error) {
-	var user models.User
-	if err := r.DB.First(&user, id).Error; err != nil {
-		return nil, err
-	}
-	return &user, nil
-}
-
-func (r *AccountRepo) GetCurrencyByID(id interface{}) (*models.Currency, error) {
-	var currency models.Currency
-	if err := r.DB.First(&currency, id).Error; err != nil {
-		return nil, err
-	}
-	return &currency, nil
-}
