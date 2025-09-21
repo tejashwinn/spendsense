@@ -4,8 +4,8 @@ import (
 	"spendsense/internal/handlers"
 
 	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"     // swagger embed files
-	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"
 )
 
@@ -36,12 +36,20 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB) {
 		accounts.DELETE("/:id", accountHandler.DeleteAccount)
 	}
 
-	// Account CRUD
+	// Account Type CRUD
 	accountTypeHandler := &handlers.AccountTypeHandler{DB: db}
 	accountTypes := api.Group("/account-types")
 	{
 		accountTypes.GET("", accountTypeHandler.ListAccountTypes)
 		accountTypes.GET("/:id", accountTypeHandler.GetAccountType)
+	}
+
+	// Account Type CRUD
+	currencyHandler := &handlers.CurrencyHandler{DB: db}
+	currencies := api.Group("/currencies")
+	{
+		currencies.GET("", currencyHandler.ListCurrencies)
+		currencies.GET("/:id", currencyHandler.GetCurrency)
 	}
 
 	// Group CRUD & membership

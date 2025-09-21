@@ -30,10 +30,29 @@ func (h *AccountHandler) CreateAccount(c *gin.Context) {
 		return
 	}
 
-	// Normally you’d extract userID from auth, here hardcoded for demo
-	userID := uint(1)
+	accType := &models.AccountType{}
+
+	if err := h.DB.First(accType, req.TypeID).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	user := &models.User{}
+	userID := util.UserIDFromContext(c)
+	if err := h.DB.First(&user, userID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+		return
+	}
+
+	currency := &models.Currency{}
+	if err := h.DB.First(&currency, userID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "currency not found"})
+		return
+	}
 
 	account := models.RequestToAccount(req, userID)
+	account.Type = *accType
+	account.User = *user
+	account.Currency = *currency
 	if err := h.DB.Create(&account).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -74,7 +93,12 @@ func (h *AccountHandler) GetAccount(c *gin.Context) {
 // @Router /accounts [get]
 func (h *AccountHandler) ListAccounts(c *gin.Context) {
 	var accounts []models.Account
-	if err := h.DB.Find(&accounts).Error; err != nil {
+	userID := util.UserIDFromContext(c)
+	if err := h.DB.
+		Where("user_id = ? ", userID).
+		Order("created_at desc").
+		Find(&accounts).
+		Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

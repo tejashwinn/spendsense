@@ -14,3 +14,5 @@ type PageResponse[T any] struct {
 type AccountPageResponse PageResponse[models.AccountResponse]
 
 type AccountTypePageResponse PageResponse[models.AccountTypeResponse]
+
+type CurrencyPageResponse PageResponse[models.CurrencyResponse]

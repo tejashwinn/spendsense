@@ -30,6 +30,18 @@ func New(cfg *config.Config) (*GormDatabase, error) {
 	pgDB.SetMaxIdleConns(1)
 	pgDB.SetMaxOpenConns(1)
 
+	// Migrate and seed AccountType
+	err = MigrateAccountType(db)
+
+	if err != nil {
+		return nil, err
+	}
+	// Migrate and seed Currency
+	err = MigrateCurrency(db)
+	if err != nil {
+		return nil, err
+	}
+
 	// Auto migrate models
 	err = db.AutoMigrate(
 		&models.User{},
@@ -41,13 +53,6 @@ func New(cfg *config.Config) (*GormDatabase, error) {
 		&models.Comment{},
 		&models.Account{},
 	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	// Migrate and seed AccountType
-	err = MigrateAccountType(db)
 
 	if err != nil {
 		return nil, err
