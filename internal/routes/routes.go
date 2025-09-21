@@ -19,10 +19,10 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB) {
 	userHandler := &handlers.UserHandler{DB: db}
 	users := api.Group("/users")
 	{
-		users.POST("/users", userHandler.CreateUser)
-		users.GET("/users/:id", userHandler.GetUser)
-		users.PUT("/users/:id", userHandler.UpdateUser)
-		users.DELETE("/users/:id", userHandler.DeleteUser)
+		users.POST("", userHandler.CreateUser)
+		users.GET("/:id", userHandler.GetUser)
+		users.PUT("/:id", userHandler.UpdateUser)
+		users.DELETE("/:id", userHandler.DeleteUser)
 	}
 
 	// Account CRUD
