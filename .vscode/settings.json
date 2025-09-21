@@ -1,0 +1,21 @@
+{
+    "dbcode.connections": [
+        {
+            "connectionId": "tGUWqeNrvKAxnhxXYSPn4",
+            "name": "spendsense",
+            "driver": "postgres",
+            "color": "#0095E6",
+            "connectionType": "host",
+            "host": "localhost",
+            "port": 5432,
+            "ssl": false,
+            "username": "spendsense_user",
+            "password": "",
+            "savePassword": "secretStorage",
+            "database": "postgres",
+            "readOnly": false,
+            "role": "development",
+            "connectionTimeout": 30
+        }
+    ]
+}
