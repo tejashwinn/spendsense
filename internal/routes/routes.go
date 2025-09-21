@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"spendsense/config"
 	"spendsense/internal/handlers"
 	"spendsense/internal/repo"
 
@@ -10,9 +11,11 @@ import (
 	"gorm.io/gorm"
 )
 
-func RegisterRoutes(r *gin.Engine, db *gorm.DB) {
+func RegisterRoutes(r *gin.Engine, db *gorm.DB, config *config.Config) {
 	// Swagger UI endpoint
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	if config.Environment != "production" {
+		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
 
 	api := r.Group("/api")
 
@@ -27,6 +30,8 @@ func RegisterRoutes(r *gin.Engine, db *gorm.DB) {
 
 	// Account Type CRUD
 	registerCurrencyRoutes(db, api)
+
+	api.GET("/oops", handlers.OopsHandler())
 
 	// Group CRUD & membership
 	api.POST("/groups", handlers.CreateGroup(db))

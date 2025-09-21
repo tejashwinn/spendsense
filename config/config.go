@@ -9,8 +9,9 @@ import (
 
 // Config holds environment variables
 type Config struct {
-	DBUrl string
-	Port  string
+	DBUrl       string
+	Port        string
+	Environment string
 }
 
 func LoadConfig() Config {
@@ -19,7 +20,8 @@ func LoadConfig() Config {
 		log.Fatal("Error loading .env file")
 	}
 	return Config{
-		DBUrl: os.Getenv("DATABASE_URL"),
-		Port:  os.Getenv("PORT"),
+		DBUrl:       os.Getenv("DATABASE_URL"),
+		Port:        os.Getenv("PORT"),
+		Environment: os.Getenv("ENVIRONMENT"),
 	}
 }

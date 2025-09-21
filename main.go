@@ -21,7 +21,7 @@ func main() {
 
 	r := gin.Default()
 	// Register routes
-	routes.RegisterRoutes(r, db.DB)
+	routes.RegisterRoutes(r, db.DB, &cfg)
 
 	r.Run(":" + cfg.Port)
 }
