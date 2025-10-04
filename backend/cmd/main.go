@@ -15,6 +15,8 @@ import (
 // @title SependSense API
 // @version 1.0
 // @description APIs for SpendSense Appilcation to interact with the backend
+// @host localhost:8080
+// @BasePath /api/
 
 func main() {
 	cfg := config.LoadConfig()

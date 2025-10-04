@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/tejashwinn/spendsense/config"
 	"github.com/tejashwinn/spendsense/internal/handlers"
 	"github.com/tejashwinn/spendsense/internal/repo"
@@ -11,8 +12,15 @@ import (
 
 func RegisterRoutes(r *gin.Engine, db *gorm.DB, config *config.Config) {
 	// Swagger UI endpoint
-	RegisterSwaggerRoutes(config, r)
 
+	RegisterSwaggerRoutes(config, r)
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
+		AllowHeaders:     []string{"*"},
+		ExposeHeaders:    []string{"*"},
+		AllowCredentials: false,
+	}))
 	api := r.Group("/api")
 
 	// User CRUD

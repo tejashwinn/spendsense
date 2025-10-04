@@ -31,6 +31,10 @@ func New(cfg *config.Config) (*GormDatabase, error) {
 	pgDB.SetMaxOpenConns(1)
 
 	// Migrate and seed AccountType
+	err = MigrateAccountType(db)
+	if err != nil {
+		return nil, err
+	}
 	err = MigrateCurrency(db)
 
 	if err != nil {
