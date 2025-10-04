@@ -12,6 +12,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @title SependSense API
+// @version 1.0
+// @description APIs for SpendSense Appilcation to interact with the backend
+
 func main() {
 	cfg := config.LoadConfig()
 	db, err := database.New(&cfg)

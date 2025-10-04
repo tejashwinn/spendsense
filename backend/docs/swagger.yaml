@@ -6,7 +6,7 @@ definitions:
       created_at:
         type: string
       currency:
-        type: string
+        $ref: '#/definitions/models.CurrencyResponse'
       id:
         type: integer
       name:
@@ -14,7 +14,9 @@ definitions:
       provider:
         type: string
       type:
-        type: string
+        $ref: '#/definitions/models.AccountTypeResponse'
+      type_id:
+        type: integer
       updated_at:
         type: string
       user_id:
@@ -60,16 +62,29 @@ definitions:
       balance:
         type: number
       currency:
-        type: string
+        type: integer
       name:
         type: string
       provider:
         type: string
-      type:
-        type: string
+      type_id:
+        type: integer
     required:
     - name
-    - type
+    - type_id
+    type: object
+  models.CurrencyResponse:
+    properties:
+      code:
+        type: string
+      decimal_places:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      symbol:
+        type: string
     type: object
   models.ExpenseRequest:
     properties:
@@ -229,13 +244,13 @@ definitions:
       balance:
         type: number
       currency:
-        type: string
+        type: integer
       name:
         type: string
       provider:
         type: string
-      type:
-        type: string
+      type_id:
+        type: integer
     type: object
   models.UserRequest:
     properties:
@@ -283,27 +298,43 @@ definitions:
       total:
         type: integer
     type: object
+  util.CurrencyPageResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/models.CurrencyResponse'
+        type: array
+      page:
+        type: integer
+      size:
+        type: integer
+      total:
+        type: integer
+    type: object
 info:
   contact: {}
+  description: APIs for SpendSense Appilcation to interact with the backend
+  title: SependSense API
+  version: "1.0"
 paths:
   /account-types:
     get:
-      description: List all account types
+      description: List all currencies
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/util.AccountTypePageResponse'
-      summary: List account types
+            $ref: '#/definitions/util.CurrencyPageResponse'
+      summary: List currencies
       tags:
       - account-types
   /account-types/{id}:
     get:
-      description: Get a single account type by ID
+      description: Get a single Currency by ID
       parameters:
-      - description: Account Type ID
+      - description: Currency ID
         in: path
         name: id
         required: true
@@ -314,8 +345,8 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.AccountTypeResponse'
-      summary: Get account type
+            $ref: '#/definitions/models.CurrencyResponse'
+      summary: Get Currency
       tags:
       - account-types
   /accounts:
@@ -828,6 +859,11 @@ paths:
       - application/json
       description: Add a user to a group
       parameters:
+      - description: Group ID
+        in: path
+        name: id
+        required: true
+        type: integer
       - description: GroupMember object
         in: body
         name: member

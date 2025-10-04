@@ -17,19 +17,19 @@ const docTemplate = `{
     "paths": {
         "/account-types": {
             "get": {
-                "description": "List all account types",
+                "description": "List all currencies",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "account-types"
                 ],
-                "summary": "List account types",
+                "summary": "List currencies",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.AccountTypePageResponse"
+                            "$ref": "#/definitions/util.CurrencyPageResponse"
                         }
                     }
                 }
@@ -37,18 +37,18 @@ const docTemplate = `{
         },
         "/account-types/{id}": {
             "get": {
-                "description": "Get a single account type by ID",
+                "description": "Get a single Currency by ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "account-types"
                 ],
-                "summary": "Get account type",
+                "summary": "Get Currency",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Account Type ID",
+                        "description": "Currency ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -58,7 +58,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.AccountTypeResponse"
+                            "$ref": "#/definitions/models.CurrencyResponse"
                         }
                     }
                 }
@@ -841,6 +841,13 @@ const docTemplate = `{
                 "summary": "Add member to group",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Group ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "GroupMember object",
                         "name": "member",
                         "in": "body",
@@ -1287,7 +1294,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "currency": {
-                    "type": "string"
+                    "$ref": "#/definitions/models.CurrencyResponse"
                 },
                 "id": {
                     "type": "integer"
@@ -1299,7 +1306,10 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "type": "string"
+                    "$ref": "#/definitions/models.AccountTypeResponse"
+                },
+                "type_id": {
+                    "type": "integer"
                 },
                 "updated_at": {
                     "type": "string"
@@ -1367,14 +1377,14 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "name",
-                "type"
+                "type_id"
             ],
             "properties": {
                 "balance": {
                     "type": "number"
                 },
                 "currency": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string"
@@ -1382,7 +1392,27 @@ const docTemplate = `{
                 "provider": {
                     "type": "string"
                 },
-                "type": {
+                "type_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.CurrencyResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "decimal_places": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "symbol": {
                     "type": "string"
                 }
             }
@@ -1627,7 +1657,7 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "currency": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string"
@@ -1635,8 +1665,8 @@ const docTemplate = `{
                 "provider": {
                     "type": "string"
                 },
-                "type": {
-                    "type": "string"
+                "type_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -1710,18 +1740,38 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
+        },
+        "util.CurrencyPageResponse": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.CurrencyResponse"
+                    }
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
         }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "1.0",
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "SependSense API",
+	Description:      "APIs for SpendSense Appilcation to interact with the backend",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

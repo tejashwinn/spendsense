@@ -115,6 +115,7 @@ func DeleteGroup(db *gorm.DB) gin.HandlerFunc {
 // @Tags groups
 // @Accept json
 // @Produce json
+// @Param id path int true "Group ID"
 // @Param member body models.GroupMemberRequest true "GroupMember object"
 // @Success 201 {object} models.GroupMemberResponse
 // @Failure 400 {object} map[string]string
