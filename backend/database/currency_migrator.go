@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func MigrateAccountType(db *gorm.DB) error {
+func MigrateCurrency(db *gorm.DB) error {
 	// Auto migrate the table
 	if err := db.AutoMigrate(&models.Currency{}); err != nil {
 		return err
