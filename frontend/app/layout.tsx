@@ -1,10 +1,9 @@
+import { Header } from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
 import "./globals.css";
-import SpendSenseMenu from "./menubar";
-
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Spendsense",
-  description: "Store and Split your spends with sanity",
+  title: "SpendSense",
+  description: "Store and Split your spends with sanity"
 };
 
 export default function RootLayout({
@@ -37,10 +36,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SpendSenseMenu />
+          <Header />
 
           {children}
         </ThemeProvider>
+
       </body>
     </html>
   );
