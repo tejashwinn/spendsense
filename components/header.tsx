@@ -22,25 +22,24 @@ import { NavigationMenuList } from "./ui/navigation-menu";
 
 
 export function Header() {
-    const { theme, setTheme } = useTheme()
-
+    const { setTheme } = useTheme()
     return (
         <NavigationMenu className="p-3 pl-6 pr-6 border-b-1">
             <NavigationMenuList className="flex justify-between w-full">
-                <div className="flex"> {/* Group your left-aligned items */}
+                <div className="flex items-center space-x-6">
                     <NavigationMenuItem>
-                        <Link href="/" className="flex items-center space-x-2"> {/* Using flexbox for alignment */}
-                            {/* // TODO Add it back with apt logo */}
-                            {/* <Image
-                                src={Logo} // Path to your image in the public directory
-                                alt="Home Icon"
-                                width={24} // Set appropriate width
-                                height={24} // Set appropriate height
-                            /> */}
-                            <span>SpendSense</span>
+                        <Link href="/" className="flex items-center space-x-2">
+                            <span className="text-xl font-semibold">SpendSense</span>
+                        </Link>
+                    </NavigationMenuItem>
+
+                    <NavigationMenuItem>
+                        <Link href="/accounts" className="flex items-center space-x-2">
+                            <span className="text-base font-medium">Accounts</span>
                         </Link>
                     </NavigationMenuItem>
                 </div>
+
 
                 <div className="flex gap-2">
                     <NavigationMenuItem>

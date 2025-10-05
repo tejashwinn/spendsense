@@ -29,6 +29,9 @@
       "@/components/*": [
         "./components/*"
       ],
+      "@/lib/*": [
+        "./lib/*"
+      ],
     }
   },
   "include": [

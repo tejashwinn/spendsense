@@ -28,7 +28,7 @@ func (r *AccountRepo) GetAccountByID(id interface{}) (*models.Account, error) {
 
 func (r *AccountRepo) ListAccountsByUser(userID interface{}) ([]models.Account, error) {
 	var accounts []models.Account
-	if err := r.DB.Where("user_id = ?", userID).Order("created_at desc").Find(&accounts).Error; err != nil {
+	if err := r.DB.Where("user_id = ?", userID).Preload("Currency").Preload("Type").Order("created_at desc").Find(&accounts).Error; err != nil {
 		return nil, err
 	}
 	return accounts, nil
