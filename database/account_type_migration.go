@@ -12,24 +12,24 @@ func MigrateAccountType(db *gorm.DB) error {
 	}
 
 	// Seed master data if not exists
-	defaultTypes := []string{
-		"BANK",
-		"CASH",
-		"WALLET",
-		"CREDIT_CARD",
-		"LOAN",
-		"INVESTMENT",
-		"RETIREMENT",
-		"CRYPTO",
-		"LIABILITY",
-		"REIMBURSABLE",
+	defaultTypes := map[string]string{
+		"BANK":         "Bank",
+		"CASH":         "Cash",
+		"WALLET":       "Wallet",
+		"CREDIT_CARD":  "Credit Card",
+		"LOAN":         "Loan",
+		"INVESTMENT":   "Investment",
+		"RETIREMENT":   "Retirement",
+		"CRYPTO":       "Crypto",
+		"LIABILITY":    "Liablity",
+		"REIMBURSABLE": "Reimbursable",
 	}
 
-	for _, t := range defaultTypes {
+	for k, v := range defaultTypes {
 		var count int64
-		db.Model(&models.AccountType{}).Where("name = ?", t).Count(&count)
+		db.Model(&models.AccountType{}).Where("type = ?", k).Count(&count)
 		if count == 0 {
-			db.Create(&models.AccountType{Name: t})
+			db.Create(&models.AccountType{Type: k, Name: v})
 		}
 	}
 

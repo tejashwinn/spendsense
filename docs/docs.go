@@ -1327,6 +1327,9 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "type": {
+                    "type": "string"
                 }
             }
         },

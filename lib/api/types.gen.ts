@@ -20,6 +20,7 @@ export type ModelsAccountResponse = {
 export type ModelsAccountTypeResponse = {
     id?: number;
     name?: string;
+    type?: string;
 };
 
 export type ModelsCommentRequest = {
